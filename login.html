@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso ao Sistema</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card-login { background: #fff; width: 100%; max-width: 400px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* Abas */
+        .abas { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
+        .aba-btn { flex: 1; padding: 10px; background: none; border: none; font-weight: bold; color: #777; cursor: pointer; }
+        .aba-btn.ativa { color: #27ae60; border-bottom: 3px solid #27ae60; }
+        
+        .formulario { display: none; }
+        .formulario.ativo { display: block; }
+        
+        .campo { margin-bottom: 15px; }
+        .campo label { display: block; margin-bottom: 5px; font-size: 14px; color: #333; font-weight: bold; }
+        .campo input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        
+        .btn-principal { width: 100%; padding: 12px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-principal:hover { background-color: #219150; }
+        
+        /* Caixas de Resultado e Alerta */
+        .caixa-resultado { display: none; margin-top: 20px; padding: 15px; background: #e8f8f5; border: 1px solid #27ae60; border-radius: 5px; text-align: center; }
+        .caixa-resultado h3 { color: #27ae60; margin-bottom: 10px; font-size: 16px; }
+        .codigo-gerado { font-size: 18px; font-weight: bold; color: #2c3e50; background: #fff; padding: 8px; border-radius: 5px; margin: 5px 0; border: 1px dashed #27ae60; word-break: break-all; }
+        .alerta-erro { color: #c0392b; font-size: 13px; margin-top: 10px; text-align: center; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="card-login">
+        <div class="abas">
+            <button class="aba-btn ativa" onclick="mudarAba('entrar')">Entrar</button>
+            <button class="aba-btn" onclick="mudarAba('cadastrar')">Criar Conta (3 Dias)</button>
+        </div>
+
+        <!-- FORMULÁRIO 1: ENTRAR -->
+        <div id="formEntrar" class="formulario ativo">
+            <div class="campo">
+                <label>Sua Chave de Acesso:</label>
+                <input type="text" id="loginChave" placeholder="Ex: AGEND-7K6A-98UB" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label>Sua Senha:</label>
+                <input type="password" id="loginSenha" placeholder="Digite sua senha de 4 dígitos">
+            </div>
+            <button type="button" class="btn-principal" onclick="autenticarUsuario()">Entrar no Sistema</button>
+            <div id="erroLogin" class="alerta-erro"></div>
+        </div>
+
+        <!-- FORMULÁRIO 2: CADASTRAR -->
+        <div id="formCadastrar" class="formulario">
+            <div class="campo">
+                <label>Nome:</label>
+                <input type="text" id="cadNome" placeholder="Seu nome" required autocomplete="off">
+            </div>
+            <div class="campo">
+                <label>Sobrenome:</label>
+                <input type="text" id="cadSobrenome" placeholder="Seu sobrenome" required autocomplete="off">
+            </div>
+            <div class="campo">
+                <label>Telefone / WhatsApp:</label>
+                <input type="tel" id="cadTelefone" placeholder="(00) 00000-0000" required autocomplete="off">
+            </div>
+            <button type="button" class="btn-principal" onclick="gerarNovaChave()">Gerar Chave e Ativar no WhatsApp</button>
+            <div id="erroCad" class="alerta-erro"></div>
+
+            <!-- EXIBIÇÃO DA CHAVE GERADA -->
+            <div id="resultadoChave" class="caixa-resultado">
+                <h3>Chave Gerada com Sucesso!</h3>
+                <p style="font-size: 12px; color: #555;">Guarde estes dados para fazer login:</p>
+                <div class="codigo-gerado">Chave: <span id="resChave"></span></div>
+                <div class="codigo-gerado">Senha: <span id="resSenha"></span></div>
+                <p style="font-size: 11px; color: #777; margin-top: 8px;">Enviamos uma cópia para validação no seu WhatsApp.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARREGA O ARQUIVO DE CHAVES DA MESMA PASTA -->
+    <script src="chaves.js"></script>
+
+    <script>
+        const SEU_WHATSAPP = "5562982413801";
+
+        function mudarAba(aba) {
+            document.querySelectorAll('.aba-btn').forEach(btn => btn.classList.remove('ativa'));
+            document.querySelectorAll('.formulario').forEach(form => form.classList.remove('ativo'));
+
+            if (aba === 'entrar') {
+                document.querySelectorAll('.aba-btn')[0].classList.add('ativa');
+                document.getElementById('formEntrar').classList.add('ativo');
+            } else {
+                document.querySelectorAll('.aba-btn')[1].classList.add('ativa');
+                document.getElementById('formCadastrar').classList.add('ativo');
+            }
+        }
+
+        // Calcula uma chave única combinando Telefone + Nome
+        function criarChavePorTelefone(nome, telefone) {
+            const textoBase = (telefone + nome).replace(/\D/g, '').toLowerCase();
+            let hash1 = 0;
+            let hash2 = 0;
+
+            for (let i = 0; i < textoBase.length; i++) {
+                const char = textoBase.charCodeAt(i);
+                hash1 = (hash1 << 5) - hash1 + char;
+                hash1 |= 0;
+                hash2 = (hash2 << 3) + hash2 ^ char;
+                hash2 |= 0;
+            }
+
+            const p1 = Math.abs(hash1).toString(36).substring(0, 4).toUpperCase().padEnd(4, 'X');
+            const p2 = Math.abs(hash2).toString(36).substring(0, 4).toUpperCase().padEnd(4, 'Y');
+
+            return `AGEND-${p1}-${p2}`;
+        }
+
+        function gerarNovaChave() {
+            const nome = document.getElementById('cadNome').value.trim();
+            const sobrenome = document.getElementById('cadSobrenome').value.trim();
+            const telefone = document.getElementById('cadTelefone').value.trim();
+            const erroCad = document.getElementById('erroCad');
+
+            erroCad.style.display = 'none';
+
+            if (!nome || !telefone) {
+                erroCad.innerText = "Por favor, preencha o Nome e o Telefone.";
+                erroCad.style.display = 'block';
+                return;
+            }
+
+            // Gerador automático e exclusivo por telefone
+            const chaveGerada = criarChavePorTelefone(nome, telefone);
+            const senhaGerada = Math.floor(1000 + Math.random() * 9000).toString();
+
+            // Preenche na tela
+            document.getElementById('resChave').innerText = chaveGerada;
+            document.getElementById('resSenha').innerText = senhaGerada;
+            document.getElementById('resultadoChave').style.display = 'block';
+
+            // Prepara a mensagem para o seu WhatsApp
+            const texto = `Olá! Me cadastrei no sistema.%0A%0A*Nome:* ${nome} ${sobrenome}%0A*Telefone:* ${telefone}%0A*Chave:* ${chaveGerada}%0A*Senha:* ${senhaGerada}%0A%0AAguardo a ativação!`;
+            window.open(`https://api.whatsapp.com/send?phone=${SEU_WHATSAPP}&text=${texto}`, '_blank');
+        }
+
+        function autenticarUsuario() {
+            const chave = document.getElementById('loginChave').value.trim();
+            const senha = document.getElementById('loginSenha').value.trim();
+            const erroLogin = document.getElementById('erroLogin');
+
+            erroLogin.style.display = 'none';
+
+            if (typeof BANCO_DE_CHAVES === 'undefined' || !BANCO_DE_CHAVES[chave]) {
+                erroLogin.innerText = "Chave inválida ou não encontrada.";
+                erroLogin.style.display = 'block';
+                return;
+            }
+
+            const dados = BANCO_DE_CHAVES[chave];
+
+            if (dados.senha !== senha) {
+                erroLogin.innerText = "Senha incorreta.";
+                erroLogin.style.display = 'block';
+                return;
+            }
+
+            const hoje = new Date();
+            const pData = dados.dataCriacao.split("-");
+            const dataCriacao = new Date(pData[0], pData[1] - 1, pData[2]);
+            
+            const diasPassados = Math.floor((hoje - dataCriacao) / (1000 * 60 * 60 * 24));
+            const diasRestantes = dados.diasValidade - diasPassados;
+
+            if (diasRestantes <= 0) {
+                erroLogin.innerText = "Sua chave expirou! Faça a assinatura para renovar.";
+                erroLogin.style.display = 'block';
+                return;
+            }
+
+            localStorage.setItem("sessao_ativa", JSON.stringify({
+                chave: chave,
+                diasRestantes: diasRestantes,
+                tipo: dados.diasValidade <= 3 ? "Teste Grátis" : "Assinante"
+            }));
+
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
