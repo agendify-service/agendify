@@ -466,58 +466,23 @@ body {
 
 /* AJUSTE RESPONSIVO DEFINITIVO PARA CELULAR */
 @media (max-width: 600px) {
-    .layout-principal {
-        flex-direction: column;
-        padding: 0 10px;
-    }
-
-    .linha-tripla, .linha-dupla {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    /* Trava os botões dos cards de agendamento */
-    .item-agenda-topo {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-
-    .select-pagamento-card {
+    /* Força os campos e linhas do formulário a ocuparem a largura total e alinharem à esquerda */
+    .campo {
         width: 100% !important;
+        margin-bottom: 12px;
     }
 
-    .acoes-card {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .btn-acao {
+    .campo input, 
+    .campo select {
         width: 100% !important;
-        text-align: center;
+        box-sizing: border-box !important;
     }
 
-    /* Corrige o botão Apagar e os nomes na lista de clientes */
-    .item-cliente-salvo {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .linha-dupla, 
+    .linha-tripla {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
         gap: 10px;
-    }
-
-    .item-cliente-salvo span {
-        word-break: break-word;
-    }
-
-    .btn-apagar-cliente {
-        flex-shrink: 0;
-        width: auto !important;
-    }
-
-    /* Empilha os resumos de caixa */
-    .indicadores, .resumo-historico {
-        flex-direction: column;
-        gap: 8px;
     }
 }
