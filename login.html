@@ -7,8 +7,32 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card-login { background: #fff; width: 100%; max-width: 400px; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        
+        .card-login { 
+    background: #fff; 
+    width: 100%; 
+    max-width: 400px; 
+    padding: 30px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    position: relative; /* Garante o alinhamento da marca d'água */
+    overflow: hidden;   /* Evita que o logo saia das bordas arredondadas */
+}
+
+/* MARCA D'ÁGUA DO LOGO NO FUNDO DO LOGIN */
+.card-login::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('logo.png');
+    background-repeat: no-repeat;
+    background-position: center 20%;
+    background-size: 220px auto; /* Tamanho proporcional da marca d'água */
+    opacity: 0.30;               /* Transparência suave para não atrapalhar a leitura */
+    pointer-events: none;        /* Permite clicar nos campos normalmente */
+}
+		
+		
+		
         /* Abas */
         .abas { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
         .aba-btn { flex: 1; padding: 10px; background: none; border: none; font-weight: bold; color: #777; cursor: pointer; }
@@ -37,6 +61,8 @@
         <div class="abas">
             <button class="aba-btn ativa" onclick="mudarAba('entrar')">Entrar</button>
             <button class="aba-btn" onclick="mudarAba('cadastrar')">Criar Conta (3 Dias)</button>
+			
+					<!-- ÁREA DE PAGAMENTO LIMPA COM LINK OFICIAL -->
         </div>
 
         <!-- FORMULÁRIO 1: ENTRAR -->
@@ -78,7 +104,30 @@
                 <div class="codigo-gerado">Senha: <span id="resSenha"></span></div>
                 <p style="font-size: 11px; color: #777; margin-top: 8px;">Enviamos uma cópia para validação no seu WhatsApp.</p>
             </div>
+			
+			<div style="text-align: center; padding: 20px; background: #fafafa; border-radius: 8px; border: 1px solid #eee; margin-top: 15px;">
+    
+    <p style="font-size: 14px; color: #333; margin-bottom: 5px;"><strong>Assinatura Agendify</strong></p>
+    <p style="font-size: 20px; color: #27ae60; font-weight: bold; margin-bottom: 15px;">R$ 9,99 <span style="font-size: 12px; color: #777;">/ mês</span></p>
+
+    <!-- BOTÃO DIRETO PARA O NUBANK -->
+    <a href="https://nubank.com.br/cobrar/1g21c/6a83b5c5-1527-4252-a251-85e107d374f0" target="_blank" 
+       style="display: block; width: 100%; padding: 12px; background-color: #820ad1; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 3px 6px rgba(0,0,0,0.1);">
+       💜 Pagar via Pix (Página Segura Nubank)
+    </a>
+
+    <p style="font-size: 11px; color: #777; margin-top: 10px;">
+        Ao clicar, você será direcionado para a página oficial de cobrança do Nubank.
+    </p>
+</div>
+			
         </div>
+		
+		<p style="text-align: center; margin-top: 15px; font-size: 13px;">
+    <a href="faq.html" style="color: #777; text-decoration: underline;">Dúvidas sobre armazenamento e backup? Veja o FAQ</a>
+</p>
+		
+		
     </div>
 
     <!-- CARREGA O ARQUIVO DE CHAVES DA MESMA PASTA -->
@@ -191,5 +240,13 @@
             window.location.href = "index.html";
         }
     </script>
+	
+	
+	<!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+<a href="https://wa.me/5562982413801?text=Olá,%20preciso%20de%20ajuda%20com%20o%20Agendify!" 
+   target="_blank" 
+   style="position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; padding: 12px 18px; border-radius: 50px; text-decoration: none; font-family: sans-serif; font-weight: bold; font-size: 14px; box-shadow: 0px 4px 10px rgba(0,0,0,0.25); z-index: 9999; display: flex; align-items: center; gap: 8px;">
+   💬 Suporte Agendify
+</a>
 </body>
 </html>

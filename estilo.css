@@ -463,3 +463,23 @@ body {
         width: 100%;
     }
 }
+
+/* AJUSTE PARA TELAS DE CELULAR */
+@media (max-width: 600px) {
+    /* Faz o layout principal virar coluna única */
+    .layout-principal {
+        flex-direction: column;
+        padding: 0 10px;
+    }
+
+    /* Empilha os campos de Valor, Data e Hora um embaixo do outro no celular */
+    .linha-tripla, .linha-dupla {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Ajusta largura total dos inputs */
+    input, select, button {
+        width: 100% !important;
+    }
+}
