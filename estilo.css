@@ -464,22 +464,88 @@ body {
     }
 }
 
-/* AJUSTE PARA TELAS DE CELULAR */
+/* ===================================================
+   AJUSTES RESPONSIVOS DE ELITE PARA CELULAR (AGENDIFY)
+   =================================================== */
 @media (max-width: 600px) {
-    /* Faz o layout principal virar coluna única */
+
+    /* 1. LAYOUT GERAL E MARGENS */
     .layout-principal {
         flex-direction: column;
-        padding: 0 10px;
+        padding: 0 8px;
     }
 
-    /* Empilha os campos de Valor, Data e Hora um embaixo do outro no celular */
+    .card {
+        padding: 12px;
+    }
+
+    /* 2. FORMULÁRIO DE NOVO AGENDAMENTO */
     .linha-tripla, .linha-dupla {
         flex-direction: column;
         gap: 10px;
     }
 
-    /* Ajusta largura total dos inputs */
-    input, select, button {
+    /* 3. CARDS DE AGENDAMENTO (HOJE / FUTUROS) */
+    .item-agenda-topo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .select-pagamento-card {
         width: 100% !important;
+    }
+
+    /* Botões dos agendamentos alinhados de forma proporcional */
+    .acoes-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Coloca os botões em 2 colunas organizadas */
+        gap: 6px;
+    }
+
+    .acoes-card .btn-zap {
+        grid-column: span 2; /* Botão do WhatsApp ocupa a largura total */
+        text-align: center;
+        padding: 8px;
+    }
+
+    .btn-acao {
+        font-size: 0.78rem;
+        padding: 8px 5px;
+        text-align: center;
+    }
+
+    /* 4. GERENCIADOR DE CLIENTES (ONDE O BOTÃO APAGAR FICAVA GIGANTE) */
+    .item-cliente-salvo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .item-cliente-salvo span {
+        word-break: break-word; /* Evita que nomes longos quebrem a tela */
+        font-size: 0.85rem;
+    }
+
+    .btn-apagar-cliente {
+        flex-shrink: 0; /* Impede o botão de esticar infinitamente */
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* 5. RESUMO DO CAIXA E INDICADORES */
+    .indicadores, .resumo-historico {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* 6. BOTÃO FLUTUANTE DE SUPORTE (NÃO SOBREPOR CONTEÚDO) */
+    a[href*="wa.me/5562982413801"] {
+        padding: 8px 14px !important;
+        font-size: 12px !important;
+        bottom: 12px !important;
+        right: 12px !important;
     }
 }
