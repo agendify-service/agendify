@@ -464,7 +464,7 @@ body {
     }
 }
 
-/* AJUSTE RESPONSIVO DEFINITIVO PARA CELULAR */
+/* AJUSTE PARA TELAS DE CELULAR */
 @media (max-width: 600px) {
     /* Força os campos e linhas do formulário a ocuparem a largura total e alinharem à esquerda */
     .campo {
