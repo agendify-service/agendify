@@ -60,7 +60,7 @@
     <div class="card-login">
         <div class="abas">
             <button class="aba-btn ativa" onclick="mudarAba('entrar')">Entrar</button>
-            <button class="aba-btn" onclick="mudarAba('cadastrar')">Criar Conta (3 Dias)</button>
+            <button class="aba-btn" onclick="mudarAba('cadastrar')">Criar Conta (14 Dias)</button>
 			
 					<!-- ÁREA DE PAGAMENTO LIMPA COM LINK OFICIAL -->
         </div>
@@ -240,7 +240,7 @@
             localStorage.setItem("sessao_ativa", JSON.stringify({
                 chave: chave,
                 diasRestantes: diasRestantes,
-                tipo: dados.diasValidade <= 3 ? "Teste Grátis" : "Assinante"
+                tipo: dados.diasValidade <= 14 ? "Teste Grátis" : "Assinante"
             }));
 
             window.location.href = "index.html";
